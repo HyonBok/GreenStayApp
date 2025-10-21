@@ -21,13 +21,26 @@ def listar_plantas():
     return [dict(u) for u in plantas]
 
 # GET - listar plantas de um cliente
-@router.get("/{id_cliente}")
+@router.get("/cliente/{id_cliente}")
 def listar_plantas_cliente(id_cliente: int):
     conn = get_db_connection()
     try:
         plantas = conn.execute("SELECT * FROM Planta WHERE Cliente = ?", (id_cliente,)).fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao listar plantas do cliente {id_cliente}. Erro: {e}")
+    finally:
+        conn.close()
+
+    return [dict(u) for u in plantas]
+
+# GET - listar plantas de um usuário
+@router.get("/usuario/{id_usuario}")
+def listar_plantas_cliente(id_usuario: int):
+    conn = get_db_connection()
+    try:
+        plantas = conn.execute("SELECT * FROM Planta INNER JOIN Cliente ON Planta.Cliente = Cliente.ID WHERE Cliente.Usuario = ?", (id_usuario,)).fetchall()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao listar plantas do cliente {id_usuario}. Erro: {e}")
     finally:
         conn.close()
 
@@ -48,3 +61,4 @@ def criar_planta(planta: PlantaCreate):
     conn.close()
 
     return {"id": novo_id, "nome": planta.nome, "especie": planta.especie}
+    

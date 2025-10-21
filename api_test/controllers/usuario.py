@@ -4,7 +4,7 @@ from api_test.connection import get_db_connection
 from api_test.models import *
 
 router = APIRouter(
-    prefix="/usuario",  # (Opcional) Adiciona um prefixo a todas as rotas deste arquivo
+    prefix="/usuarios",  # (Opcional) Adiciona um prefixo a todas as rotas deste arquivo
 )
 
 # GET - listar todos os usuários
