@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:green_stay/login_widget.dart';
+import 'package:green_stay/src/widget/login_widget.dart';
 
 class GreenStayApp extends StatelessWidget {
   const GreenStayApp({super.key});
