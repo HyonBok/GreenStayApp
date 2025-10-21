@@ -38,7 +38,7 @@ def listar_plantas_cliente(id_cliente: int):
 def listar_plantas_cliente(id_usuario: int):
     conn = get_db_connection()
     try:
-        plantas = conn.execute("SELECT * FROM Planta INNER JOIN Cliente ON Planta.Cliente = Cliente.ID WHERE Cliente.Usuario = ?", (id_usuario,)).fetchall()
+        plantas = conn.execute("SELECT P.Id, P.Nome As NomePlanta, P.Especie, C.Nome As NomeCliente FROM Planta P INNER JOIN Cliente C ON P.Cliente = C.ID WHERE C.Usuario = ?", (id_usuario,)).fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao listar plantas do cliente {id_usuario}. Erro: {e}")
     finally:

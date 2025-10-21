@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:green_stay/src/models/plant_model.dart';
+import 'package:green_stay/src/repositories/plant_repository.dart';
 import 'package:green_stay/src/widget/login_widget.dart';
 
 class PlantsPage extends StatefulWidget {
@@ -11,11 +13,29 @@ class PlantsPage extends StatefulWidget {
 }
 
 class _PlantsPageState extends State<PlantsPage> {
-  final List<Map<String, String>> plants = [
-    {'cliente': 'Cliente A', 'planta': 'Planta 1'},
-    {'cliente': 'Cliente B', 'planta': 'Planta 2'},
-    {'cliente': 'Cliente C', 'planta': 'Planta 3'},
-  ];
+  final PlantRepository _repository = PlantRepository();
+  late Future<List<PlantModel>> _plantsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _plantsFuture = _fetchPlants();
+  }
+
+  Future<List<PlantModel>> _fetchPlants() {
+    return _repository.fetchPlantsByUser(widget.user);
+  }
+
+  void _reloadPlants() {
+    setState(() {
+      _plantsFuture = _fetchPlants();
+    });
+  }
+
+  Future<void> _onRefresh() async {
+    _reloadPlants();
+    await _plantsFuture;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,21 +54,92 @@ class _PlantsPageState extends State<PlantsPage> {
           },
         ),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: plants.length,
-        itemBuilder: (context, index) {
-          final item = plants[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: ListTile(
-              leading: const Icon(Icons.local_florist, color: Colors.green),
-              title: Text(item['planta']!),
-              subtitle: Text('Cliente: ${item['cliente']}'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Selecionou ${item['planta']}')),
+      body: FutureBuilder<List<PlantModel>>(
+        future: _plantsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Não foi possível carregar as plantas.',
+                      style: Theme.of(context).textTheme.titleMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      snapshot.error.toString(),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.redAccent),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _reloadPlants,
+                      child: const Text('Tentar novamente'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          final plants = snapshot.data ?? [];
+
+          if (plants.isEmpty) {
+            return RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: const [
+                  SizedBox(height: 120),
+                  Center(
+                    child: Text(
+                      'Nenhuma planta cadastrada para este usuário.',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: plants.length,
+              itemBuilder: (context, index) {
+                final plant = plants[index];
+                final plantName =
+                    plant.nome.isEmpty ? 'Planta ${plant.id}' : plant.nome;
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    leading: const Icon(Icons.local_florist, color: Colors.green),
+                    title: Text(plantName),
+                    subtitle: Text(
+                      'Cliente: ${plant.clientDisplayName}\nEspécie: ${plant.especieDisplay}',
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Selecionou $plantName')),
+                      );
+                    },
+                  ),
                 );
               },
             ),
