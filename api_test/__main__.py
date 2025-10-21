@@ -1,11 +1,11 @@
 # api.py
 from fastapi import FastAPI
-from api_test.controllers import generic, login
+from api_test.controllers import login, usuario
 
 app = FastAPI(title="API Plantas")
 
 app.include_router(login.router)
-app.include_router(generic.router)
+app.include_router(usuario.router)
 
 if __name__ == "__main__":
     # Permite executar o arquivo diretamente: python api_test\API.py
