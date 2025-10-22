@@ -1,15 +1,15 @@
-class rest_exception implements Exception {
+class RestException implements Exception {
   final String message;
-  rest_exception(this.message);
+  RestException(this.message);
 
   @override
   String toString() => message;
 }
 
-class InvalidCredentialsException extends rest_exception {
+class InvalidCredentialsException extends RestException {
   InvalidCredentialsException() : super('Usuário ou senha inválidos.');
 }
 
-class ServerErrorException extends rest_exception {
+class ServerErrorException extends RestException {
   ServerErrorException([String? msg]) : super(msg ?? 'Erro interno no servidor.');
 }
