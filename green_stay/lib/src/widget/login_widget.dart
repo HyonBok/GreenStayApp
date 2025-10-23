@@ -36,12 +36,14 @@ class _LoginPageState extends State<LoginPage> {
           // Se login for bem-sucedido → redireciona
           if (state.status == LoginStatus.success) {
             Future.microtask(() {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => PlantsPage(user: _controller.user!),
-                ),
-              );
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PlantsPage(user: _controller.user!),
+                  ),
+                );
+              });
             });
           }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:green_stay/src/models/plant_model.dart';
 import 'package:green_stay/src/repositories/plant_repository.dart';
 import 'package:green_stay/src/widget/login_widget.dart';
+import 'package:green_stay/src/widget/plants_info_widget.dart';
 
 class PlantsPage extends StatefulWidget {
   final int user;
@@ -128,15 +129,22 @@ class _PlantsPageState extends State<PlantsPage> {
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
-                    leading: const Icon(Icons.local_florist, color: Colors.green),
+                    leading:
+                        const Icon(Icons.local_florist, color: Colors.green),
                     title: Text(plantName),
                     subtitle: Text(
                       'Cliente: ${plant.clientDisplayName}\nEspécie: ${plant.especieDisplay}',
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Selecionou $plantName')),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PlantsInfoPage(
+                            user: widget.user,
+                            plant: plant,
+                          ),
+                        ),
                       );
                     },
                   ),
