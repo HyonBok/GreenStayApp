@@ -53,8 +53,8 @@ def criar_planta(planta: PlantaCreate):
 
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO Planta (Nome, Especie, Cliente) VALUES (?, ?, ?)",
-        (planta.nome, planta.especie, planta.clienteId)
+        "INSERT INTO Planta (Nome, Especie, Cliente, UmidadeIdeal, LuminosidadeIdeal, TemperaturaIdeal, Imagem64) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (planta.nome, planta.especie, planta.clienteId, planta.umidade, planta.luminosidade, planta.temperatura, planta.base64)
     )
     conn.commit()
     novo_id = cursor.lastrowid

@@ -18,6 +18,10 @@ class PlantaCreate(BaseModel):
     nome: str
     especie: str
     clienteId: int
+    umidade: int
+    luminosidade: int
+    temperatura: int
+    base64: str
 
 
 # Modelo para criação de informação da planta

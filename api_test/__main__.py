@@ -1,6 +1,5 @@
-# api.py
 from fastapi import FastAPI
-from api_test.controllers import cliente, login, planta, plantaInfo, usuario
+from api_test.controllers import cliente, login, planta, plantaInfo, usuario, imagem
 
 app = FastAPI(title="API Plantas")
 
@@ -9,9 +8,9 @@ app.include_router(usuario.router)
 app.include_router(cliente.router)
 app.include_router(planta.router)
 app.include_router(plantaInfo.router)
+app.include_router(imagem.router)
 
 if __name__ == "__main__":
-    # Permite executar o arquivo diretamente: python api_test\API.py
     try:
         import uvicorn
     except Exception:
