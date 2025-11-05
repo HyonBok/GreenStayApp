@@ -10,7 +10,7 @@ class PlantInfoRepository {
   PlantInfoRepository({Client? client}) : _client = client ?? Client();
 
   Future<List<PlantInfoModel>> fetchPlantInfoByPlant(int plantId) async {
-    final url = Uri.parse('http://10.0.2.2:8000/plantas-info/planta/$plantId');
+    final url = Uri.parse('https://greenstayapp.onrender.com/plantas-info/planta/$plantId');
 
     try {
       final response = await _client.get(url, headers: {

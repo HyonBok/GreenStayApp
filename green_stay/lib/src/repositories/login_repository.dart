@@ -6,7 +6,7 @@ class LoginRepository {
   final cliente = Client();
 
   Future<int> login(String username, String password) async {
-    final url = Uri.parse('http://10.0.2.2:8000/login/');
+    final url = Uri.parse('https://greenstayapp.onrender.com/login/');
 
     final response = await cliente.post(
       url,
