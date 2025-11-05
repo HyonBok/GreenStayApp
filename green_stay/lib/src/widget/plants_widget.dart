@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:green_stay/src/models/plant_model.dart';
 import 'package:green_stay/src/repositories/plant_repository.dart';
+import 'package:green_stay/src/widget/add_plant_widget.dart';
 import 'package:green_stay/src/widget/login_widget.dart';
 import 'package:green_stay/src/widget/plants_info_widget.dart';
 
@@ -38,6 +39,19 @@ class _PlantsPageState extends State<PlantsPage> {
     await _plantsFuture;
   }
 
+  Future<void> _openAddPlantPage() async {
+    final added = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AddPlantPage(userId: widget.user),
+      ),
+    );
+
+    if (added == true) {
+      _reloadPlants();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +68,11 @@ class _PlantsPageState extends State<PlantsPage> {
             );
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _openAddPlantPage,
+        icon: const Icon(Icons.add),
+        label: const Text('Adicionar planta'),
       ),
       body: FutureBuilder<List<PlantModel>>(
         future: _plantsFuture,

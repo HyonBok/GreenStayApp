@@ -41,9 +41,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
+        <key>CADisableMinimumFrameDurationOnPhone</key>
+        <true/>
+        <key>UIApplicationSupportsIndirectInputEvents</key>
+        <true/>
+        <key>NSCameraUsageDescription</key>
+        <string>Precisamos acessar a câmera para identificar novas plantas.</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>Precisamos acessar suas fotos para selecionar a imagem da planta.</string>
+        <key>NSPhotoLibraryAddUsageDescription</key>
+        <string>Precisamos salvar a foto da planta na sua galeria.</string>
 </dict>
 </plist>
