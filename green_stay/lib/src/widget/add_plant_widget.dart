@@ -279,7 +279,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
         children: [
           DropdownButtonFormField<int>(
             decoration: const InputDecoration(labelText: 'Cliente'),
-            value: _selectedClientId,
+            initialValue: _selectedClientId,
             items: clients
                 .map(
                   (client) => DropdownMenuItem<int>(
@@ -431,9 +431,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
             );
           }
 
-          if (_selectedClientId == null) {
-            _selectedClientId = clients.first.id;
-          }
+          _selectedClientId ??= clients.first.id;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
