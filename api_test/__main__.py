@@ -1,5 +1,18 @@
+"""FastAPI application entry-point.
+
+Render executes the project via ``uvicorn`` with the ``PORT`` environment
+variable, so we expose the ``app`` object at module level and read the
+runtime configuration from environment variables when the module is run as a
+script.  This keeps local development straightforward (``python -m api_test``)
+while matching Render's expectations.
+"""
+
+from __future__ import annotations
+
+import os
 from fastapi import FastAPI
-from api_test.controllers import cliente, login, planta, plantaInfo, usuario, imagem
+
+from api_test.controllers import cliente, imagem, login, planta, plantaInfo, usuario
 
 app = FastAPI(title="API Plantas")
 
@@ -13,10 +26,10 @@ app.include_router(imagem.router)
 if __name__ == "__main__":
     try:
         import uvicorn
-    except Exception:
+    except Exception:  # pragma: no cover - import error path for local usage
         print("Uvicorn não está instalado. Instale com: pip install uvicorn[standard]")
         print("Ou execute o app com: python -m uvicorn api_test.__main__:app --reload")
     else:
-        # Inicia o servidor passando a aplicação como import string — necessário para reload/workers
-        # formato: "package.module:app_object"
-        uvicorn.run("api_test.__main__:app", host="127.0.0.1", port=8000, reload=True)
+        host = os.getenv("HOST", "0.0.0.0")
+        port = int(os.getenv("PORT", "8000"))
+        uvicorn.run("api_test.__main__:app", host=host, port=port, reload=False)
