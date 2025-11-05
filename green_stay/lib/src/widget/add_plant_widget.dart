@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:green_stay/src/models/client_model.dart';
 import 'package:green_stay/src/models/plant_create_model.dart';
 import 'package:green_stay/src/models/plant_identification_model.dart';
@@ -19,6 +20,8 @@ class AddPlantPage extends StatefulWidget {
 }
 
 class _AddPlantPageState extends State<AddPlantPage> {
+  static const _defaultImageAsset = 'icons/plant-icon.jpg';
+
   final _formKey = GlobalKey<FormState>();
   final _plantRepository = PlantRepository();
   final _clientRepository = ClientRepository();
@@ -150,20 +153,12 @@ class _AddPlantPageState extends State<AddPlantPage> {
       return;
     }
 
-    if (_selectedImage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selecione uma imagem da planta.')),
-      );
-      return;
-    }
-
     setState(() {
       _isSaving = true;
     });
 
     try {
-      final bytes = await _selectedImage!.readAsBytes();
-      final base64Image = base64Encode(bytes);
+      final base64Image = await _getImageBase64();
 
       int parseOrZero(String value) => int.tryParse(value.trim()) ?? 0;
 
@@ -195,6 +190,19 @@ class _AddPlantPageState extends State<AddPlantPage> {
     }
   }
 
+  Future<String> _getImageBase64() async {
+    final image = _selectedImage;
+    if (image != null) {
+      final bytes = await image.readAsBytes();
+      return base64Encode(bytes);
+    }
+
+    final data = await rootBundle.load(_defaultImageAsset);
+    final Uint8List bytes =
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    return base64Encode(bytes);
+  }
+
   Widget _buildImageSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,28 +212,40 @@ class _AddPlantPageState extends State<AddPlantPage> {
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
-        if (_selectedImage != null)
-          ClipRRect(
+        SizedBox(
+          height: 180,
+          width: double.infinity,
+          child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.file(
-              _selectedImage!,
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          )
-        else
-          Container(
-            height: 180,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.grey.shade200,
-              border: Border.all(color: Colors.grey.shade400),
-            ),
-            alignment: Alignment.center,
-            child: const Text('Nenhuma imagem selecionada'),
+            child: _selectedImage != null
+                ? Image.file(
+                    _selectedImage!,
+                    fit: BoxFit.cover,
+                  )
+                : Container(
+                    color: Colors.grey.shade200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          _defaultImageAsset,
+                          height: 80,
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Nenhuma imagem selecionada',
+                          style: TextStyle(color: Colors.grey.shade700),
+                        ),
+                        Text(
+                          'Utilizaremos o ícone padrão.',
+                          style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
           ),
+        ),
         const SizedBox(height: 12),
         Row(
           children: [
