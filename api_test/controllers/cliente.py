@@ -20,6 +20,25 @@ def listar_clientes():
 
     return [dict(u) for u in clientes]
 
+# GET - listar clientes por usuário
+@router.get("/usuario/{id_usuario}")
+def listar_clientes_usuario(id_usuario: int):
+    conn = get_db_connection()
+    try:
+        clientes = conn.execute(
+            "SELECT * FROM Cliente WHERE Usuario = ?",
+            (id_usuario,),
+        ).fetchall()
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao listar clientes do usuário {id_usuario}. Erro: {e}",
+        )
+    finally:
+        conn.close()
+
+    return [dict(u) for u in clientes]
+
 # POST - criar um novo cliente
 @router.post("")
 def criar_cliente(cliente: ClienteCreate):
