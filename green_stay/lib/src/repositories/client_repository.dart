@@ -10,7 +10,7 @@ class ClientRepository {
   ClientRepository({http.Client? client}) : _client = client ?? http.Client();
 
   Future<List<ClientModel>> fetchClientsByUser(int userId) async {
-    final url = Uri.parse('http://10.0.2.2:8000/clientes/usuario/$userId');
+    final url = Uri.parse('https://greenstayapp.onrender.com/clientes/usuario/$userId');
 
     try {
       final response = await _client.get(url, headers: {

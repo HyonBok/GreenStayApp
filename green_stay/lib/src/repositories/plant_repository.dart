@@ -13,7 +13,7 @@ class PlantRepository {
   PlantRepository({http.Client? client}) : _client = client ?? http.Client();
 
   Future<List<PlantModel>> fetchPlantsByUser(int userId) async {
-    final url = Uri.parse('http://10.0.2.2:8000/plantas/usuario/$userId');
+    final url = Uri.parse('https://greenstayapp.onrender.com/plantas/usuario/$userId');
 
     try {
       final response = await _client.get(url, headers: {
@@ -41,7 +41,7 @@ class PlantRepository {
   }
 
   Future<void> createPlant(PlantCreateModel plant) async {
-    final url = Uri.parse('http://10.0.2.2:8000/plantas');
+    final url = Uri.parse('https://greenstayapp.onrender.com/plantas');
 
     try {
       final response = await _client.post(
@@ -65,7 +65,7 @@ class PlantRepository {
   }
 
   Future<PlantIdentificationModel> identifyPlant(File imageFile) async {
-    final url = Uri.parse('http://10.0.2.2:8000/imagem');
+    final url = Uri.parse('https://greenstayapp.onrender.com/imagem');
 
     try {
       final request = http.MultipartRequest('POST', url)
