@@ -3,6 +3,7 @@ import 'package:green_stay/src/models/plant_model.dart';
 import 'package:green_stay/src/repositories/plant_repository.dart';
 import 'package:green_stay/src/widget/add_plant_widget.dart';
 import 'package:green_stay/src/widget/login_widget.dart';
+import 'package:green_stay/src/widget/manage_active_plants_page.dart';
 import 'package:green_stay/src/widget/plants_info_widget.dart';
 
 class PlantsPage extends StatefulWidget {
@@ -68,6 +69,20 @@ class _PlantsPageState extends State<PlantsPage> {
             );
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_input_component),
+            tooltip: 'Gerenciar plantas ativas',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ManageActivePlantsPage(user: widget.user),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openAddPlantPage,
