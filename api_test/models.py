@@ -31,3 +31,8 @@ class PlantaInfoCreate(BaseModel):
     umidade: int
     data: str
     plantaId: int
+
+# Modelo para ativar planta no módulo desejado
+class PlantaAtivar(BaseModel):
+    plantaId: int
+    moduloId: int

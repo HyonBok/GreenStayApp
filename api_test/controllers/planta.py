@@ -35,7 +35,7 @@ def listar_plantas_cliente(id_cliente: int):
 
 # GET - listar plantas de um usuário
 @router.get("/usuario/{id_usuario}")
-def listar_plantas_cliente(id_usuario: int):
+def listar_plantas_usuario(id_usuario: int):
     conn = get_db_connection()
     try:
         plantas = conn.execute("SELECT P.Id, P.Nome As NomePlanta, P.Especie, C.Nome As NomeCliente FROM Planta P INNER JOIN Cliente C ON P.Cliente = C.ID WHERE C.Usuario = ?", (id_usuario,)).fetchall()
@@ -46,9 +46,22 @@ def listar_plantas_cliente(id_usuario: int):
 
     return [dict(u) for u in plantas]
 
+# GET - listar planta ativa
+@router.get("/ativo/{id_ativo}")
+def planta_ativo(id_ativo: int):
+    conn = get_db_connection()
+    try:
+        planta = conn.execute("SELECT P.Id, P.TemperaturaIdeal, P.LuminosidadeIdeal, P.UmidadeIdeal FROM Planta P WHERE ATIVO = ?", (id_ativo,)).fetchall()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao verificar planta ativa do módulo {id_ativo}. Erro: {e}")
+    finally:
+        conn.close()
+
+    return planta
+
 # POST - criar uma nova planta 
 @router.post("")
-def criar_planta(planta: PlantaCreate):
+def planta_criar(planta: PlantaCreate):
     conn = get_db_connection()
 
     cursor = conn.cursor()
@@ -61,4 +74,25 @@ def criar_planta(planta: PlantaCreate):
     conn.close()
 
     return {"id": novo_id, "nome": planta.nome, "especie": planta.especie}
+
+# POST - colocar planta ativa
+@router.post("/ativar")
+def planta_ativar(plantaAtivar: PlantaAtivar):
+    conn = get_db_connection()
+
+    conn.execute(
+                    """
+                    UPDATE Planta
+                    SET Ativo = CASE
+                        WHEN Id = ? THEN ?
+                        WHEN Ativo = ? THEN 0
+                        ELSE Ativo
+                    END;
+                    """, 
+                    (plantaAtivar.plantaId, plantaAtivar.moduloId, plantaAtivar.moduloId))
+    conn.commit()
+
+    conn.close()
+
+    return plantaAtivar.plantaId
     
