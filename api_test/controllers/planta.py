@@ -81,15 +81,15 @@ def planta_ativar(plantaAtivar: PlantaAtivar):
     conn = get_db_connection()
 
     conn.execute(
-                    """
-                    UPDATE Planta
-                    SET Ativo = CASE
-                        WHEN Id = ? THEN ?
-                        WHEN Ativo = ? THEN 0
-                        ELSE Ativo
-                    END;
-                    """, 
-                    (plantaAtivar.plantaId, plantaAtivar.moduloId, plantaAtivar.moduloId))
+                """
+                UPDATE Planta
+                SET Ativo = CASE
+                    WHEN Id = ? THEN ?
+                    WHEN Ativo = ? THEN 0
+                    ELSE Ativo
+                END;
+                """, 
+                (plantaAtivar.plantaId, plantaAtivar.moduloId, plantaAtivar.moduloId))
     conn.commit()
 
     conn.close()

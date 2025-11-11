@@ -1,16 +1,22 @@
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
 import 'package:green_stay/src/exceptions/rest_exception.dart';
 import 'package:green_stay/src/models/client_model.dart';
 import 'package:http/http.dart' as http;
 
 class ClientRepository {
   final http.Client _client;
+  late final String _baseUrl;
 
-  ClientRepository({http.Client? client}) : _client = client ?? http.Client();
+  ClientRepository({http.Client? client})
+      : _client = client ?? http.Client() {
+    _baseUrl = kDebugMode
+        ? 'http://10.0.2.2:8000'
+        : 'https://greenstayapp.onrender.com';
+  }
 
   Future<List<ClientModel>> fetchClientsByUser(int userId) async {
-    final url = Uri.parse('https://greenstayapp.onrender.com/clientes/usuario/$userId');
+    final url = Uri.parse('$_baseUrl/clientes/usuario/$userId');
 
     try {
       final response = await _client.get(url, headers: {

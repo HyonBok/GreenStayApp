@@ -1,14 +1,23 @@
 import 'dart:convert';
 import 'package:green_stay/src/exceptions/rest_exception.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 
 class LoginRepository {
-  final cliente = Client();
+  final http.Client _client;
+  late final String _baseUrl;
+
+  LoginRepository({http.Client? client})
+      : _client = client ?? http.Client() {
+    _baseUrl = kDebugMode
+        ? 'http://10.0.2.2:8000'
+        : 'https://greenstayapp.onrender.com';
+  }
 
   Future<int> login(String username, String password) async {
-    final url = Uri.parse('https://greenstayapp.onrender.com/login/');
+    final url = Uri.parse('$_baseUrl/login/');
 
-    final response = await cliente.post(
+    final response = await _client.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
