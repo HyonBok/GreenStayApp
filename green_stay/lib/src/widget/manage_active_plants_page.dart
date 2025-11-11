@@ -130,6 +130,16 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
   Widget _buildModuleCard(int moduleId) {
     final isUpdating = _updatingModule[moduleId] ?? false;
     final selectedPlantId = _selectedPlantByModule[moduleId];
+    final unavailablePlantIds = _selectedPlantByModule.entries
+        .where(
+          (entry) =>
+              entry.key != moduleId && entry.value != null && _plants.any((p) => p.id == entry.value),
+        )
+        .map((entry) => entry.value!)
+        .toSet();
+    final availablePlants = _plants.where(
+      (plant) => plant.id == selectedPlantId || !unavailablePlantIds.contains(plant.id),
+    );
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -147,7 +157,7 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
               value: _plants.any((p) => p.id == selectedPlantId)
                   ? selectedPlantId
                   : null,
-              items: _plants
+              items: availablePlants
                   .map(
                     (plant) => DropdownMenuItem<int>(
                       value: plant.id,
