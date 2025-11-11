@@ -71,10 +71,26 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
       return;
     }
 
+    if (_selectedPlantByModule[moduleId] == plantId) {
+      return;
+    }
+
     final previousSelection = _selectedPlantByModule[moduleId];
+    final conflictingModules = _selectedPlantByModule.entries
+        .where(
+          (entry) => entry.key != moduleId && entry.value == plantId,
+        )
+        .map((entry) => entry.key)
+        .toList();
+    final previousConflictingSelections = {
+      for (final id in conflictingModules) id: _selectedPlantByModule[id]
+    };
 
     setState(() {
       _selectedPlantByModule[moduleId] = plantId;
+      for (final id in conflictingModules) {
+        _selectedPlantByModule[id] = null;
+      }
       _updatingModule[moduleId] = true;
     });
 
@@ -94,6 +110,9 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
       if (!mounted) return;
       setState(() {
         _selectedPlantByModule[moduleId] = previousSelection;
+        previousConflictingSelections.forEach((id, selection) {
+          _selectedPlantByModule[id] = selection;
+        });
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
