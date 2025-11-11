@@ -51,6 +51,27 @@ class PlantModel {
       return text.isEmpty ? null : text;
     }
 
+    String? parseImage(Map<String, dynamic> map) {
+      final candidates = [
+        map['Imagem64'],
+        map['imagem64'],
+        map['imagem'],
+        map['Imagem'],
+        map['imagemBase64'],
+        map['ImagemBase64'],
+        map['base64'],
+        map['Base64'],
+      ];
+
+      for (final candidate in candidates) {
+        final parsed = parseNullableString(candidate);
+        if (parsed != null) {
+          return parsed;
+        }
+      }
+      return null;
+    }
+
     return PlantModel(
       id: parseInt(json['ID'] ?? json['id']),
       nome: parseString(json['NomePlanta'] ?? json['Nome'] ?? json['nome']),
@@ -60,7 +81,7 @@ class PlantModel {
       umidadeIdeal: parseNullableInt(json['UmidadeIdeal'] ?? json['umidadeIdeal']),
       luminosidadeIdeal: parseNullableInt(json['LuminosidadeIdeal'] ?? json['luminosidadeIdeal']),
       temperaturaIdeal: parseNullableInt(json['TemperaturaIdeal'] ?? json['temperaturaIdeal']),
-      imagemBase64: parseNullableString(json['Imagem64'] ?? json['imagem64']),
+      imagemBase64: parseImage(json),
     );
   }
 
@@ -79,7 +100,11 @@ class PlantModel {
       return null;
     }
     try {
-      return base64Decode(base64);
+      final cleaned = base64.contains(',')
+          ? base64.substring(base64.lastIndexOf(',') + 1)
+          : base64;
+      final normalized = cleaned.replaceAll(RegExp(r'\s'), '');
+      return base64Decode(normalized);
     } catch (_) {
       return null;
     }

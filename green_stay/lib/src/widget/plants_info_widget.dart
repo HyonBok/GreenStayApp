@@ -162,7 +162,10 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                     width: barWidth * actualFactor,
                     height: 12,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.25),
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
@@ -180,17 +183,16 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
             );
           },
         ),
-        if (ideal != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Text(
-              'Ideal: $ideal$unit',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: Colors.grey.shade600),
-            ),
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Text(
+            ideal != null ? 'Ideal: $ideal$unit' : 'Ideal não informado',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Colors.grey.shade600),
           ),
+        ),
       ],
     );
   }
