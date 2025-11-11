@@ -74,7 +74,12 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: const Text('Login'),
                   ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: _openRegisterDialog,
+                  child: const Text('Criar nova conta'),
+                ),
+                const SizedBox(height: 12),
                 Text(state.message),
               ],
             ),
@@ -82,5 +87,131 @@ class _LoginPageState extends State<LoginPage> {
         },
       ),
     );
+  }
+
+  Future<void> _openRegisterDialog() async {
+    final formKey = GlobalKey<FormState>();
+    final usernameController = TextEditingController(text: _nameController.text);
+    final passwordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    bool isSubmitting = false;
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: !isSubmitting,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            Future<void> submit() async {
+              if (isSubmitting) return;
+              if (!formKey.currentState!.validate()) {
+                return;
+              }
+
+              setStateDialog(() => isSubmitting = true);
+
+              try {
+                await _controller.register(
+                  usernameController.text.trim(),
+                  passwordController.text,
+                );
+                if (mounted) {
+                  Navigator.of(dialogContext).pop(true);
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(e.toString())),
+                  );
+                }
+                setStateDialog(() => isSubmitting = false);
+              }
+            }
+
+            return AlertDialog(
+              title: const Text('Criar conta'),
+              content: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: usernameController,
+                        decoration: const InputDecoration(labelText: 'Nome do usuário'),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Informe um nome de usuário';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: passwordController,
+                        decoration: const InputDecoration(labelText: 'Senha'),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Informe uma senha';
+                          }
+                          if (value.length < 4) {
+                            return 'A senha deve ter pelo menos 4 caracteres';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: confirmPasswordController,
+                        decoration: const InputDecoration(labelText: 'Confirmar senha'),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value != passwordController.text) {
+                            return 'As senhas não coincidem';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSubmitting
+                      ? null
+                      : () {
+                          Navigator.of(dialogContext).pop(false);
+                        },
+                  child: const Text('Cancelar'),
+                ),
+                FilledButton(
+                  onPressed: isSubmitting ? null : submit,
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Criar conta'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    final createdUsername = usernameController.text;
+
+    usernameController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+
+    if (result == true && mounted) {
+      _nameController.text = createdUsername;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Usuário cadastrado com sucesso!')),
+      );
+    }
   }
 }

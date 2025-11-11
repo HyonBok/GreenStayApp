@@ -3,6 +3,7 @@ import 'package:green_stay/src/models/plant_model.dart';
 import 'package:green_stay/src/repositories/plant_repository.dart';
 import 'package:green_stay/src/widget/add_plant_widget.dart';
 import 'package:green_stay/src/widget/login_widget.dart';
+import 'package:green_stay/src/widget/client_management_page.dart';
 import 'package:green_stay/src/widget/manage_active_plants_page.dart';
 import 'package:green_stay/src/widget/plants_info_widget.dart';
 
@@ -53,6 +54,33 @@ class _PlantsPageState extends State<PlantsPage> {
     }
   }
 
+  Future<void> _openClientManagementPage() async {
+    final changed = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ClientManagementPage(userId: widget.user),
+      ),
+    );
+
+    if (changed == true) {
+      _reloadPlants();
+    }
+  }
+
+  Widget _buildPlantAvatar(PlantModel plant) {
+    final imageBytes = plant.imageBytes;
+    if (imageBytes != null) {
+      return CircleAvatar(
+        backgroundImage: MemoryImage(imageBytes),
+      );
+    }
+
+    return CircleAvatar(
+      backgroundColor: Colors.green.shade100,
+      child: const Icon(Icons.local_florist, color: Colors.green),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +98,11 @@ class _PlantsPageState extends State<PlantsPage> {
           },
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.people_outline),
+            tooltip: 'Gerenciar clientes',
+            onPressed: _openClientManagementPage,
+          ),
           IconButton(
             icon: const Icon(Icons.settings_input_component),
             tooltip: 'Gerenciar plantas ativas',
@@ -163,8 +196,7 @@ class _PlantsPageState extends State<PlantsPage> {
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
-                    leading:
-                        const Icon(Icons.local_florist, color: Colors.green),
+                    leading: _buildPlantAvatar(plant),
                     title: Text(plantName),
                     subtitle: Text(
                       'Cliente: ${plant.clientDisplayName}\nEspécie: ${plant.especieDisplay}',

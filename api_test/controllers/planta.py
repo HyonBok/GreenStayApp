@@ -25,7 +25,12 @@ def listar_plantas():
 def listar_plantas_cliente(id_cliente: int):
     conn = get_db_connection()
     try:
-        plantas = conn.execute("SELECT * FROM Planta WHERE Cliente = ?", (id_cliente,)).fetchall()
+        plantas = conn.execute(
+            "SELECT P.ID, P.Nome, P.Especie, P.Cliente, P.UmidadeIdeal, "
+            "P.LuminosidadeIdeal, P.TemperaturaIdeal, P.Imagem64 "
+            "FROM Planta P WHERE P.Cliente = ?",
+            (id_cliente,),
+        ).fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao listar plantas do cliente {id_cliente}. Erro: {e}")
     finally:
@@ -38,7 +43,12 @@ def listar_plantas_cliente(id_cliente: int):
 def listar_plantas_usuario(id_usuario: int):
     conn = get_db_connection()
     try:
-        plantas = conn.execute("SELECT P.Id, P.Nome As NomePlanta, P.Especie, C.Nome As NomeCliente FROM Planta P INNER JOIN Cliente C ON P.Cliente = C.ID WHERE C.Usuario = ?", (id_usuario,)).fetchall()
+        plantas = conn.execute(
+            "SELECT P.Id, P.Nome As NomePlanta, P.Especie, C.Nome As NomeCliente, "
+            "P.Cliente, P.UmidadeIdeal, P.LuminosidadeIdeal, P.TemperaturaIdeal, P.Imagem64 "
+            "FROM Planta P INNER JOIN Cliente C ON P.Cliente = C.ID WHERE C.Usuario = ?",
+            (id_usuario,),
+        ).fetchall()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao listar plantas do cliente {id_usuario}. Erro: {e}")
     finally:
