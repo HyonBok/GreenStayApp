@@ -115,11 +115,11 @@ class _LoginPageState extends State<LoginPage> {
                   usernameController.text.trim(),
                   passwordController.text,
                 );
-                if (mounted) {
+                if (context.mounted) {
                   Navigator.of(dialogContext).pop(true);
                 }
               } catch (e) {
-                if (mounted) {
+                if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(e.toString())),
                   );

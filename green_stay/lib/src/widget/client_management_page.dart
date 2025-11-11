@@ -29,7 +29,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
     });
   }
 
-  Future<void> _createClient() async {
+  Future<void> _createClient(BuildContext context) async {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController();
     bool isSaving = false;
@@ -54,11 +54,11 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
                   userId: widget.userId,
                 );
 
-                if (mounted) {
-                  Navigator.of(dialogContext).pop(true);
+                if (context.mounted) {
+                  Navigator.of(context).pop(true);
                 }
               } catch (e) {
-                if (mounted) {
+                if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(e.toString())),
                   );
@@ -116,7 +116,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
         _hasChanges = true;
       });
       await _reloadClients();
-      if (mounted) {
+      if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Cliente "$createdName" criado com sucesso.')),
         );
@@ -127,7 +127,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
   Future<void> _deleteClient(ClientModel client) async {
     try {
       await _repository.deleteClient(client.id);
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       setState(() {
         _hasChanges = true;
@@ -163,7 +163,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
       if (confirmCascade == true) {
         try {
           await _repository.deleteClient(client.id, cascade: true);
-          if (!mounted) return;
+          if (!context.mounted) return;
 
           setState(() {
             _hasChanges = true;
@@ -179,21 +179,21 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
             ),
           );
         } catch (error) {
-          if (!mounted) return;
+          if (!context.mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(error.toString())),
           );
         }
       }
     } catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
     }
   }
 
-  Widget _buildClientList(List<ClientModel> clients) {
+  Widget _buildClientList(List<ClientModel> clients, BuildContext context) {
     if (clients.isEmpty) {
       return Center(
         child: Column(
@@ -205,7 +205,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
             const Text('Nenhum cliente cadastrado ainda.'),
             const SizedBox(height: 12),
             FilledButton.icon(
-              onPressed: _createClient,
+              onPressed: () => _ClientManagementPageState()._createClient(context),
               icon: const Icon(Icons.person_add_alt_1),
               label: const Text('Cadastrar primeiro cliente'),
             ),
@@ -237,11 +237,12 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+      if (!didPop) {
         Navigator.of(context).pop(_hasChanges);
-        return false;
-      },
+      }
+    },
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Clientes'),
@@ -251,7 +252,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: _createClient,
+          onPressed: () => _ClientManagementPageState()._createClient(context),
           icon: const Icon(Icons.person_add_alt_1),
           label: const Text('Novo cliente'),
         ),
@@ -299,10 +300,10 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         const SizedBox(height: 120),
-                        _buildClientList(clients),
+                        _buildClientList(clients, context),
                       ],
                     )
-                  : _buildClientList(clients),
+                  : _buildClientList(clients, context),
             );
           },
         ),

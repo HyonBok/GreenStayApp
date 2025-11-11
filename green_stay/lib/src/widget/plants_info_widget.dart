@@ -162,7 +162,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                     width: barWidth * actualFactor,
                     height: 12,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.25),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
