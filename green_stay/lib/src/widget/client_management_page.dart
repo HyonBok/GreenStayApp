@@ -30,16 +30,17 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
   }
 
   Future<void> _createClient(BuildContext context) async {
+    final parentContext = context;
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController();
     bool isSaving = false;
 
     final created = await showDialog<bool>(
-      context: context,
+      context: parentContext,
       barrierDismissible: !isSaving,
       builder: (dialogContext) {
         return StatefulBuilder(
-          builder: (context, setStateDialog) {
+          builder: (_, setStateDialog) {
             Future<void> submit() async {
               if (isSaving) return;
               if (!formKey.currentState!.validate()) {
@@ -54,12 +55,12 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
                   userId: widget.userId,
                 );
 
-                if (context.mounted) {
-                  Navigator.of(context).pop(true);
+                if (dialogContext.mounted) {
+                  Navigator.of(dialogContext).pop(true);
                 }
               } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                if (mounted) {
+                  ScaffoldMessenger.of(parentContext).showSnackBar(
                     SnackBar(content: Text(e.toString())),
                   );
                 }
@@ -73,7 +74,8 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
                 key: formKey,
                 child: TextFormField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Nome do cliente'),
+                  decoration:
+                      const InputDecoration(labelText: 'Nome do cliente'),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Informe o nome do cliente';
@@ -109,7 +111,6 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
     );
 
     final createdName = nameController.text;
-    nameController.dispose();
 
     if (created == true) {
       setState(() {
@@ -122,6 +123,10 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
         );
       }
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      nameController.dispose();
+    });
   }
 
   Future<void> _deleteClient(ClientModel client) async {
@@ -205,7 +210,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
             const Text('Nenhum cliente cadastrado ainda.'),
             const SizedBox(height: 12),
             FilledButton.icon(
-              onPressed: () => _ClientManagementPageState()._createClient(context),
+              onPressed: () => _createClient(context),
               icon: const Icon(Icons.person_add_alt_1),
               label: const Text('Cadastrar primeiro cliente'),
             ),
@@ -239,10 +244,10 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-      if (!didPop) {
-        Navigator.of(context).pop(_hasChanges);
-      }
-    },
+        if (!didPop) {
+          Navigator.of(context).pop(_hasChanges);
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Clientes'),
@@ -252,7 +257,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _ClientManagementPageState()._createClient(context),
+          onPressed: () => _createClient(context),
           icon: const Icon(Icons.person_add_alt_1),
           label: const Text('Novo cliente'),
         ),

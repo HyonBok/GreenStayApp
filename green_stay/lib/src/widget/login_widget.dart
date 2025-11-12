@@ -90,18 +90,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _openRegisterDialog() async {
+    final parentContext = context;
     final formKey = GlobalKey<FormState>();
-    final usernameController = TextEditingController(text: _nameController.text);
+    final usernameController =
+        TextEditingController(text: _nameController.text);
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
     bool isSubmitting = false;
 
     final result = await showDialog<bool>(
-      context: context,
+      context: parentContext,
       barrierDismissible: !isSubmitting,
       builder: (dialogContext) {
         return StatefulBuilder(
-          builder: (context, setStateDialog) {
+          builder: (_, setStateDialog) {
             Future<void> submit() async {
               if (isSubmitting) return;
               if (!formKey.currentState!.validate()) {
@@ -115,12 +117,12 @@ class _LoginPageState extends State<LoginPage> {
                   usernameController.text.trim(),
                   passwordController.text,
                 );
-                if (context.mounted) {
+                if (dialogContext.mounted) {
                   Navigator.of(dialogContext).pop(true);
                 }
               } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                if (mounted) {
+                  ScaffoldMessenger.of(parentContext).showSnackBar(
                     SnackBar(content: Text(e.toString())),
                   );
                 }
@@ -138,7 +140,8 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       TextFormField(
                         controller: usernameController,
-                        decoration: const InputDecoration(labelText: 'Nome do usuário'),
+                        decoration:
+                            const InputDecoration(labelText: 'Nome do usuário'),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Informe um nome de usuário';
@@ -162,7 +165,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextFormField(
                         controller: confirmPasswordController,
-                        decoration: const InputDecoration(labelText: 'Confirmar senha'),
+                        decoration:
+                            const InputDecoration(labelText: 'Confirmar senha'),
                         obscureText: true,
                         validator: (value) {
                           if (value != passwordController.text) {
@@ -203,15 +207,17 @@ class _LoginPageState extends State<LoginPage> {
 
     final createdUsername = usernameController.text;
 
-    usernameController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-
     if (result == true && mounted) {
       _nameController.text = createdUsername;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Usuário cadastrado com sucesso!')),
       );
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      usernameController.dispose();
+      passwordController.dispose();
+      confirmPasswordController.dispose();
+    });
   }
 }
