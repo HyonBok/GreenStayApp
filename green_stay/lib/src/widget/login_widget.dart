@@ -207,15 +207,17 @@ class _LoginPageState extends State<LoginPage> {
 
     final createdUsername = usernameController.text;
 
-    usernameController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-
     if (result == true && mounted) {
       _nameController.text = createdUsername;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Usuário cadastrado com sucesso!')),
       );
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      usernameController.dispose();
+      passwordController.dispose();
+      confirmPasswordController.dispose();
+    });
   }
 }

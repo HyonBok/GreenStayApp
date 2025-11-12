@@ -165,7 +165,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                       color: Theme.of(context)
                           .colorScheme
                           .primary
-                          .withOpacity(0.25),
+                          .withAlpha(64),
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),

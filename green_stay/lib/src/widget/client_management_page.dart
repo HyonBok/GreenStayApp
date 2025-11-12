@@ -111,7 +111,6 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
     );
 
     final createdName = nameController.text;
-    nameController.dispose();
 
     if (created == true) {
       setState(() {
@@ -124,6 +123,10 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
         );
       }
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      nameController.dispose();
+    });
   }
 
   Future<void> _deleteClient(ClientModel client) async {
