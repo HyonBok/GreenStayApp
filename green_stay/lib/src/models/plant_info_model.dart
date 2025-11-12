@@ -37,5 +37,24 @@ class PlantInfoModel {
     );
   }
 
-  String get formattedDate => data.isEmpty ? 'Data não informada' : data;
+  DateTime? get parsedDate => DateTime.tryParse(data);
+
+  String get formattedDate {
+    if (data.isEmpty) {
+      return 'Data não informada';
+    }
+
+    final parsed = DateTime.tryParse(data);
+    if (parsed == null) {
+      return data;
+    }
+
+    String twoDigits(int value) => value.toString().padLeft(2, '0');
+
+    final datePart =
+        '${twoDigits(parsed.day)}/${twoDigits(parsed.month)}/${parsed.year}';
+    final timePart = '${twoDigits(parsed.hour)}:${twoDigits(parsed.minute)}';
+
+    return '$datePart $timePart';
+  }
 }

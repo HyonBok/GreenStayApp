@@ -18,4 +18,8 @@ class LoginController extends ValueNotifier<LoginState> {
       value = LoginState.error(e.toString());
     }
   }
+
+  Future<void> register(String username, String password) async {
+    await _repository.register(username, password);
+  }
 }

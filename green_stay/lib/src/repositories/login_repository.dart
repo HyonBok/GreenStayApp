@@ -38,4 +38,36 @@ class LoginRepository {
       }
     }
   }
+
+  Future<void> register(String username, String password) async {
+    final url = Uri.parse('$_baseUrl/usuarios');
+
+    try {
+      final response = await _client.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'nome': username,
+          'senha': password,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return;
+      }
+
+      if (response.statusCode == 409) {
+        throw DuplicateUserException();
+      }
+
+      throw ServerErrorException(
+        'Erro ao registrar usuário (código ${response.statusCode}).',
+      );
+    } catch (e) {
+      if (e is RestException) {
+        rethrow;
+      }
+      throw ServerErrorException('Erro ao registrar usuário: $e');
+    }
+  }
 }

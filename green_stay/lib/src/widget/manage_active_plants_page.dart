@@ -144,7 +144,7 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<int>(
-              value: _plants.any((p) => p.id == selectedPlantId)
+              initialValue: _plants.any((p) => p.id == selectedPlantId)
                   ? selectedPlantId
                   : null,
               items: _plants
