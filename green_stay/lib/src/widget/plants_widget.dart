@@ -120,7 +120,7 @@ class _PlantsPageState extends State<PlantsPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openAddPlantPage,
         icon: const Icon(Icons.add),
-        label: const Text('Adicionar planta'),
+        label: const Text('Adicionar planta', textScaler: TextScaler.linear(1.3)),
       ),
       body: FutureBuilder<List<PlantModel>>(
         future: _plantsFuture,
@@ -142,6 +142,7 @@ class _PlantsPageState extends State<PlantsPage> {
                       'Não foi possível carregar as plantas.',
                       style: Theme.of(context).textTheme.titleMedium,
                       textAlign: TextAlign.center,
+                      textScaler: TextScaler.linear(1.3),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -155,7 +156,7 @@ class _PlantsPageState extends State<PlantsPage> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _reloadPlants,
-                      child: const Text('Tentar novamente'),
+                      child: const Text('Tentar novamente', textScaler: TextScaler.linear(1.3)),
                     ),
                   ],
                 ),
@@ -174,8 +175,9 @@ class _PlantsPageState extends State<PlantsPage> {
                   SizedBox(height: 120),
                   Center(
                     child: Text(
-                      'Nenhuma planta cadastrada para este usuário.',
+                      'Nenhuma planta cadastrada \npara este usuário.',
                       textAlign: TextAlign.center,
+                      textScaler: TextScaler.linear(1.3),
                     ),
                   ),
                 ],
@@ -197,9 +199,10 @@ class _PlantsPageState extends State<PlantsPage> {
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
                     leading: _buildPlantAvatar(plant),
-                    title: Text(plantName),
+                    title: Text(plantName, textScaler: TextScaler.linear(1.2)),
                     subtitle: Text(
                       'Cliente: ${plant.clientDisplayName}\nEspécie: ${plant.especieDisplay}',
+                      textScaler: TextScaler.linear(1.2)
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {

@@ -76,7 +76,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao selecionar imagem: $e')),
+        SnackBar(content: Text('Erro ao selecionar imagem: $e', textScaler: TextScaler.linear(1.2))),
       );
     }
   }
@@ -148,7 +148,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
 
     if (_selectedClientId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selecione um cliente para a planta.')),
+        const SnackBar(content: Text('Selecione um cliente para a planta.', textScaler: TextScaler.linear(1.2))),
       );
       return;
     }
@@ -179,7 +179,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao salvar planta: $e')),
+        SnackBar(content: Text('Erro ao salvar planta: $e', textScaler: TextScaler.linear(1.2))),
       );
     } finally {
       if (mounted) {
@@ -210,6 +210,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
         const Text(
           'Foto da planta',
           style: TextStyle(fontWeight: FontWeight.w600),
+          textScaler: TextScaler.linear(1.2)
         ),
         const SizedBox(height: 8),
         SizedBox(
@@ -236,10 +237,12 @@ class _AddPlantPageState extends State<AddPlantPage> {
                         Text(
                           'Nenhuma imagem selecionada',
                           style: TextStyle(color: Colors.grey.shade700),
+                          textScaler: TextScaler.linear(1.2)
                         ),
                         Text(
                           'Utilizaremos o ícone padrão.',
                           style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                          textScaler: TextScaler.linear(1.2)
                         ),
                       ],
                     ),
@@ -253,7 +256,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
               child: OutlinedButton.icon(
                 onPressed: _isIdentifying ? null : () => _pickImage(ImageSource.camera),
                 icon: const Icon(Icons.photo_camera_outlined),
-                label: const Text('Tirar foto'),
+                label: const Text('Tirar foto', textScaler: TextScaler.linear(1.2)),
               ),
             ),
             const SizedBox(width: 12),
@@ -262,7 +265,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                 onPressed:
                     _isIdentifying ? null : () => _pickImage(ImageSource.gallery),
                 icon: const Icon(Icons.photo_library_outlined),
-                label: const Text('Galeria'),
+                label: const Text('Galeria', textScaler: TextScaler.linear(1.2)),
               ),
             ),
           ],
@@ -277,6 +280,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
               'Confiança da identificação: ${(100 * _confidence!).clamp(0, 100).toStringAsFixed(1)}%',
+              textScaler: TextScaler.linear(1.2)
             ),
           ),
         if (_identificationError != null)
@@ -285,6 +289,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
             child: Text(
               _identificationError!,
               style: const TextStyle(color: Colors.redAccent),
+              textScaler: TextScaler.linear(1.2)
             ),
           ),
       ],
@@ -298,7 +303,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DropdownButtonFormField<int>(
-            decoration: const InputDecoration(labelText: 'Cliente'),
+            decoration: const InputDecoration(labelText: 'Cliente', labelStyle: TextStyle(fontSize: 20)),
             initialValue: _selectedClientId,
             items: clients
                 .map(
@@ -317,7 +322,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
           ),
           TextFormField(
             controller: _nomeController,
-            decoration: const InputDecoration(labelText: 'Nome da planta'),
+            decoration: const InputDecoration(labelText: 'Nome da planta', labelStyle: TextStyle(fontSize: 20)),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Informe o nome da planta';
@@ -327,7 +332,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
           ),
           TextFormField(
             controller: _especieController,
-            decoration: const InputDecoration(labelText: 'Espécie'),
+            decoration: const InputDecoration(labelText: 'Espécie', labelStyle: TextStyle(fontSize: 20)),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Informe a espécie';
@@ -337,19 +342,19 @@ class _AddPlantPageState extends State<AddPlantPage> {
           ),
           TextFormField(
             controller: _umidadeController,
-            decoration: const InputDecoration(labelText: 'Umidade ideal (%)'),
+            decoration: const InputDecoration(labelText: 'Umidade ideal (%)', labelStyle: TextStyle(fontSize: 20)),
             keyboardType: TextInputType.number,
           ),
           TextFormField(
             controller: _luminosidadeController,
             decoration:
-                const InputDecoration(labelText: 'Luminosidade ideal (lux)'),
+                const InputDecoration(labelText: 'Luminosidade ideal (lux)', labelStyle: TextStyle(fontSize: 20)),
             keyboardType: TextInputType.number,
           ),
           TextFormField(
             controller: _temperaturaController,
             decoration:
-                const InputDecoration(labelText: 'Temperatura ideal (°C)'),
+                const InputDecoration(labelText: 'Temperatura ideal (°C)', labelStyle: TextStyle(fontSize: 20)),
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 24),
@@ -364,7 +369,7 @@ class _AddPlantPageState extends State<AddPlantPage> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.save_outlined),
-              label: Text(_isSaving ? 'Salvando...' : 'Cadastrar planta'),
+              label: Text(_isSaving ? 'Salvando...' : 'Cadastrar planta', textScaler: TextScaler.linear(1.2)),
             ),
           ),
         ],

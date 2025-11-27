@@ -83,11 +83,13 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                   Text(
                     _plantTitle,
                     style: Theme.of(context).textTheme.titleLarge,
+                    textScaler: TextScaler.linear(1.2)
                   ),
                   const SizedBox(height: 8),
-                  Text('Espécie: ${widget.plant.especieDisplay}'),
-                  Text('Cliente: ${widget.plant.clientDisplayName}'),
-                  Text('Usuário ID: ${widget.user}'),
+                  Text('Espécie: ${widget.plant.especieDisplay}',textScaler: TextScaler.linear(1.2)),
+                  Text('Cliente: ${widget.plant.clientDisplayName}',textScaler: TextScaler.linear(1.2)),
+                  Text('Usuário ID: ${widget.user}',textScaler: TextScaler.linear(1.2)),
+                  Text('Planta ID: ${widget.plant.id}',textScaler: TextScaler.linear(1.2)),
                   if (widget.plant.umidadeIdeal != null ||
                       widget.plant.luminosidadeIdeal != null ||
                       widget.plant.temperaturaIdeal != null) ...[
@@ -97,6 +99,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                       '${widget.plant.umidadeIdeal != null ? 'Umidade ${widget.plant.umidadeIdeal}% ' : ''}'
                       '${widget.plant.luminosidadeIdeal != null ? 'Luminosidade ${widget.plant.luminosidadeIdeal} lux ' : ''}'
                       '${widget.plant.temperaturaIdeal != null ? 'Temperatura ${widget.plant.temperaturaIdeal}°C' : ''}',
+                      textScaler: TextScaler.linear(1.2),
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
@@ -186,7 +189,8 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
         Padding(
           padding: const EdgeInsets.only(top: 4.0),
           child: Text(
-            ideal != null ? 'Ideal: $ideal$unit' : 'Ideal não informado',
+            ideal != null ? 'Ideal: $ideal$unit' : 'Ideal não informado', 
+            textScaler: TextScaler.linear(1.2),
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
@@ -207,6 +211,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
             Text(
               'Última medição',
               style: Theme.of(context).textTheme.titleMedium,
+              textScaler: TextScaler.linear(1.2)
             ),
             const SizedBox(height: 4),
             Text(
@@ -215,6 +220,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                   .textTheme
                   .bodySmall
                   ?.copyWith(color: Colors.grey.shade600),
+                  textScaler: TextScaler.linear(1.2)
             ),
             const SizedBox(height: 16),
             _buildMetricBar(
@@ -247,6 +253,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                   .textTheme
                   .bodySmall
                   ?.copyWith(color: Colors.grey.shade600),
+                  textScaler: TextScaler.linear(1.2)
             ),
           ],
         ),
@@ -259,12 +266,13 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
         leading: const Icon(Icons.analytics, color: Colors.blueAccent),
-        title: Text('Registro ${info.id}'),
+        title: Text('Registro ${info.id}',textScaler: TextScaler.linear(1.2)),
         subtitle: Text(
           'Data: ${info.formattedDate}\n'
           'Luminosidade: ${info.luminosidade}\n'
           'Temperatura: ${info.temperatura}\n'
           'Umidade: ${info.umidade}',
+          textScaler: TextScaler.linear(1.2),
         ),
       ),
     );
@@ -303,6 +311,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                       'Não foi possível carregar as informações da planta.',
                       style: Theme.of(context).textTheme.titleMedium,
                       textAlign: TextAlign.center,
+                      textScaler: TextScaler.linear(1.2)
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -312,6 +321,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                           .textTheme
                           .bodyMedium
                           ?.copyWith(color: Colors.redAccent),
+                          textScaler: TextScaler.linear(1.2)
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
@@ -339,6 +349,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                     child: Text(
                       'Nenhuma informação registrada para esta planta.',
                       textAlign: TextAlign.center,
+                      textScaler: TextScaler.linear(1.2)
                     ),
                   ),
                 ],
@@ -363,6 +374,7 @@ class _PlantsInfoPageState extends State<PlantsInfoPage> {
                   Text(
                     'Histórico recente',
                     style: Theme.of(context).textTheme.titleMedium,
+                    textScaler: TextScaler.linear(1.2)
                   ),
                   const SizedBox(height: 8),
                   ...history.map(_buildInfoCard),

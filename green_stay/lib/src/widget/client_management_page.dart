@@ -69,13 +69,13 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
             }
 
             return AlertDialog(
-              title: const Text('Novo cliente'),
+              title: const Text('Novo cliente', textScaler: TextScaler.linear(1.2)),
               content: Form(
                 key: formKey,
                 child: TextFormField(
                   controller: nameController,
                   decoration:
-                      const InputDecoration(labelText: 'Nome do cliente'),
+                      const InputDecoration(labelText: 'Nome do cliente', labelStyle: TextStyle(fontSize: 20)),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Informe o nome do cliente';
@@ -91,7 +91,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
                       : () {
                           Navigator.of(dialogContext).pop(false);
                         },
-                  child: const Text('Cancelar'),
+                  child: const Text('Cancelar', textScaler: TextScaler.linear(1.2)),
                 ),
                 FilledButton(
                   onPressed: isSaving ? null : submit,
@@ -101,7 +101,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
                           height: 18,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Criar'),
+                      : const Text('Criar', textScaler: TextScaler.linear(1.2)),
                 ),
               ],
             );
@@ -119,7 +119,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
       await _reloadClients();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Cliente "$createdName" criado com sucesso.')),
+          SnackBar(content: Text('Cliente "$createdName" criado com sucesso.', textScaler: TextScaler.linear(1.2))),
         );
       }
     }
@@ -139,7 +139,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
       });
       await _reloadClients();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Cliente "${client.nome}" excluído.')),
+        SnackBar(content: Text('Cliente "${client.nome}" excluído.', textScaler: TextScaler.linear(1.2))),
       );
     } on ClientHasPlantsException catch (e) {
       final confirmCascade = await showDialog<bool>(
@@ -147,18 +147,19 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
         builder: (dialogContext) {
           final suffix = e.plantCount == 1 ? 'planta vinculada.' : 'plantas vinculadas.';
           return AlertDialog(
-            title: const Text('Excluir cliente'),
+            title: const Text('Excluir cliente', textScaler: TextScaler.linear(1.3)),
             content: Text(
               'Este cliente possui ${e.plantCount} $suffix\nDeseja excluir o cliente e todas as plantas vinculadas?',
+              textScaler: TextScaler.linear(1.3)
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(false),
-                child: const Text('Cancelar'),
+                child: const Text('Cancelar', textScaler: TextScaler.linear(1.3)),
               ),
               FilledButton(
                 onPressed: () => Navigator.of(dialogContext).pop(true),
-                child: const Text('Excluir tudo'),
+                child: const Text('Excluir tudo', textScaler: TextScaler.linear(1.3)),
               ),
             ],
           );
@@ -180,6 +181,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
             SnackBar(
               content: Text(
                 'Cliente "${client.nome}" e $plantLabel removidos.',
+                textScaler: TextScaler.linear(1.2)
               ),
             ),
           );
@@ -207,12 +209,12 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
           children: [
             const Icon(Icons.people_outline, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
-            const Text('Nenhum cliente cadastrado ainda.'),
+            const Text('Nenhum cliente cadastrado ainda.', textScaler: TextScaler.linear(1.2)),
             const SizedBox(height: 12),
             FilledButton.icon(
               onPressed: () => _createClient(context),
               icon: const Icon(Icons.person_add_alt_1),
-              label: const Text('Cadastrar primeiro cliente'),
+              label: const Text(('Cadastrar primeiro cliente'), textScaler: TextScaler.linear(1.2))
             ),
           ],
         ),
@@ -259,7 +261,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => _createClient(context),
           icon: const Icon(Icons.person_add_alt_1),
-          label: const Text('Novo cliente'),
+          label: const Text('Novo cliente', textScaler: TextScaler.linear(1.2)),
         ),
         body: FutureBuilder<List<ClientModel>>(
           future: _clientsFuture,
@@ -278,7 +280,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
                       const Icon(Icons.error_outline, color: Colors.red, size: 48),
                       const SizedBox(height: 16),
                       const Text(
-                        'Não foi possível carregar os clientes.',
+                        'Não foi possível carregar os clientes.', textScaler: TextScaler.linear(1.2),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
@@ -289,7 +291,7 @@ class _ClientManagementPageState extends State<ClientManagementPage> {
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: _reloadClients,
-                        child: const Text('Tentar novamente'),
+                        child: const Text('Tentar novamente', textScaler: TextScaler.linear(1.2)),
                       ),
                     ],
                   ),

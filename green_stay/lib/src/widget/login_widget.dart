@@ -54,11 +54,11 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 TextField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Nome'),
+                  decoration: const InputDecoration(labelText: 'Nome', labelStyle: TextStyle(fontSize: 25)),
                 ),
                 TextField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Senha'),
+                  decoration: const InputDecoration(labelText: 'Senha', labelStyle: TextStyle(fontSize: 25)),
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
@@ -72,12 +72,12 @@ class _LoginPageState extends State<LoginPage> {
                         _passwordController.text,
                       );
                     },
-                    child: const Text('Login'),
+                    child: const Text('Login', textScaler: TextScaler.linear(1.3) ),
                   ),
                 const SizedBox(height: 12),
                 TextButton(
                   onPressed: _openRegisterDialog,
-                  child: const Text('Criar nova conta'),
+                  child: const Text('Criar nova conta', textScaler: TextScaler.linear(1.3)),
                 ),
                 const SizedBox(height: 12),
                 Text(state.message),
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
             }
 
             return AlertDialog(
-              title: const Text('Criar conta'),
+              title: const Text('Criar conta', textScaler: TextScaler.linear(1.3)),
               content: Form(
                 key: formKey,
                 child: SingleChildScrollView(
@@ -141,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         controller: usernameController,
                         decoration:
-                            const InputDecoration(labelText: 'Nome do usuário'),
+                            const InputDecoration(labelText: 'Nome do usuário', labelStyle: TextStyle(fontSize: 20)),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Informe um nome de usuário';
@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextFormField(
                         controller: passwordController,
-                        decoration: const InputDecoration(labelText: 'Senha'),
+                        decoration: const InputDecoration(labelText: 'Senha', labelStyle: TextStyle(fontSize: 20)),
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         controller: confirmPasswordController,
                         decoration:
-                            const InputDecoration(labelText: 'Confirmar senha'),
+                            const InputDecoration(labelText: 'Confirmar senha', labelStyle: TextStyle(fontSize: 20)),
                         obscureText: true,
                         validator: (value) {
                           if (value != passwordController.text) {
@@ -186,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                       : () {
                           Navigator.of(dialogContext).pop(false);
                         },
-                  child: const Text('Cancelar'),
+                  child: const Text('Cancelar', textScaler: TextScaler.linear(1.3)),
                 ),
                 FilledButton(
                   onPressed: isSubmitting ? null : submit,
@@ -196,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 18,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Criar conta'),
+                      : const Text('Criar conta', textScaler: TextScaler.linear(1.3)),
                 ),
               ],
             );
@@ -210,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
     if (result == true && mounted) {
       _nameController.text = createdUsername;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Usuário cadastrado com sucesso!')),
+        const SnackBar(content: Text('Usuário cadastrado com sucesso!', textScaler: TextScaler.linear(1.5))),
       );
     }
 

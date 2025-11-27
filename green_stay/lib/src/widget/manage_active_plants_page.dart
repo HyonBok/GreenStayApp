@@ -52,7 +52,7 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Erro ao carregar os módulos ativos: $e'),
+          content: Text('Erro ao carregar os módulos ativos: $e', textScaler: TextScaler.linear(1.2)),
         ),
       );
     } finally {
@@ -103,7 +103,7 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Planta definida como ativa no módulo $moduleId.'),
+          content: Text('Planta definida como ativa no módulo $moduleId.', textScaler: TextScaler.linear(1.2)),
         ),
       );
     } catch (e) {
@@ -116,7 +116,7 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Erro ao ativar planta no módulo $moduleId: $e'),
+          content: Text('Erro ao ativar planta no módulo $moduleId: $e', textScaler: TextScaler.linear(1.2)),
         ),
       );
     } finally {
@@ -155,6 +155,7 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
                         plant.nome.isEmpty
                             ? 'Planta ${plant.id}'
                             : plant.nome,
+                            textScaler: TextScaler.linear(1.2)
                       ),
                     ),
                   )
@@ -184,7 +185,7 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gerenciar plantas ativas'),
+        title: const Text('Gerenciar plantas ativas', textScaler: TextScaler.linear(1.2)),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -198,8 +199,9 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
                       SizedBox(height: 120),
                       Center(
                         child: Text(
-                          'Nenhuma planta cadastrada disponível para ativação.',
+                          'Nenhuma planta cadastrada \ndisponível para ativação.',
                           textAlign: TextAlign.center,
+                          textScaler: TextScaler.linear(1.2)
                         ),
                       ),
                     ],
@@ -214,6 +216,7 @@ class _ManageActivePlantsPageState extends State<ManageActivePlantsPage> {
                       const Text(
                         'Escolha quais plantas estão ativas em cada módulo.',
                         textAlign: TextAlign.center,
+                        textScaler: TextScaler.linear(1.2)
                       ),
                       const SizedBox(height: 16),
                       for (final moduleId in _modules) _buildModuleCard(moduleId),
